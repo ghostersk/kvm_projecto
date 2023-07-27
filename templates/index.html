@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mouse and Keyboard Events</title>
+</head>
+<body>
+    <h1>Mouse and Keyboard Events</h1>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+    <script>
+        //const socket = io('http://localhost:5000');
+        const socket = io();
+
+        // Function to send screen size to the backend
+        function sendScreenSize() {
+            var screenWidth = window.screen.width;
+            var screenHeight = window.screen.height;
+            var data = {
+                type: 'screensize',
+                width: screenWidth,
+                height: screenHeight
+            };
+            socket.send(JSON.stringify(data));
+        }        
+        // Event listener for mouse movements
+        document.addEventListener('mousemove', function(event) {
+            var data = {
+                type: 'mousemove',
+                x: event.clientX,
+                y: event.clientY
+            };
+            socket.emit('mousemove', data);
+        });
+
+        // Event listener for mouse clicks
+        document.addEventListener('click', function(event) {
+            var data = {
+                type: 'click',
+                x: event.clientX,
+                y: event.clientY
+            };
+            socket.emit('click', data);
+        });
+
+        // Event listener for keyboard presses
+        document.addEventListener('keydown', function(event) {
+            var data = {
+                type: 'keydown',
+                key: event.key
+            };
+            socket.emit('keydown', data);
+        });
+
+        // Event listener for keyboard release
+        document.addEventListener('keyup', function(event) {
+            var data = {
+                type: 'keyup',
+                key: event.key
+            };
+            socket.emit('keyup', data);
+        });
+        // Event listener for window resize
+        window.addEventListener('resize', function(event) {
+            sendScreenSize(); // Update screen size on resize
+        });
+
+        // Send screen size to backend on page load
+        window.onload = sendScreenSize;
+
+    </script>
+</body>
+</html>
